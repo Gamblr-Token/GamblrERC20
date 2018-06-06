@@ -102,7 +102,8 @@ contract Gamblr is Ownable {
     mapping (address => mapping (address => uint256)) public allowed;
 
     function HydroToken() public {
-        balances[msg.sender] = totalSupply;
+        balances[msg.sender] = 3000000000;
+        balances[this] = 7000000000;
     }
 
     function transfer(address _to, uint256 _amount) public returns (bool success) {
@@ -175,5 +176,20 @@ contract Gamblr is Ownable {
         address indexed _burner,
         uint256 _amount
         );
+        
+    mapping(address => bool) public joined;
+        
+    function receiveTokens() public returns(bool){
+        require(balanceOf(this) > 0);
+        require(!joined[msg.sender]);
+        if (balanceOf(this) > 1000000) {
+            doTransfer(this, msg.sender, 1000000);
+            joined[msg.sender] = true;
+            return joined[msg.sender];
+        }
+        doTransfer(this, msg.sender, balanceOf(this));
+        joined[msg.sender] = true;
+        return joined[msg.sender];
+    }    
         
 }
